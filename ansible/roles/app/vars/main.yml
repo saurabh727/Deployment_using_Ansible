@@ -1,0 +1,9 @@
+---
+app_jar_file: 'fx-app-{{ versions.app }}.jar'
+app_base_dir: '{{ lib_dir }}/app'
+app_libs_dir: '{{ app_base_dir }}/app-libs'
+app_conf_dir: '{{ conf_dir }}/app'
+app_log_dir: '{{ log_dir }}/app'
+app_data_dir: '{{ data_dir }}/app'
+nginx_conf_dir: '/etc/nginx/conf.d/'
+app_lib_file: 'fx-app-{{ versions.app }}-libs.zip'

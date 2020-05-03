@@ -1,0 +1,8 @@
+---
+node_type: DC
+
+mb_tags:
+  - DC
+
+es_cluster_name: '{{ app_name }}'
+es_coordinate: false

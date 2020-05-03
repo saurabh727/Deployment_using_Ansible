@@ -1,0 +1,13 @@
+#!/bin/sh
+
+export DC_BIN=${SE_EXT}/python2/embedded/bin/
+export DC_SITE_PACKAGES=${SE_EXT}/python2/embedded/lib/python2.7/site-packages/
+export NETRA_DAEMON_DIR=${SE_RUN}/dc/
+export NETRA_LOG_DIR=${SE_LOG}/dc/
+export NETRA_DATA_DIR=${SE_DATA}/dc/
+export NETRA_CONF_DIR=${SE_CONF}/dc/
+export NETRA_CONF_PATH=${SE_CONF}/dc/netra.conf
+export NETRA_HOME_DIR=${SE_TMP}/dc/
+export PATH=${DC_BIN}:$PATH
+export MIBDIRS=${SE_EXT}/python2/embedded/share/snmp/mibs/
+export DC_LOG_LEVEL={{ log_level }}

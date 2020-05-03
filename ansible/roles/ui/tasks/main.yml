@@ -1,0 +1,51 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ ui_user }}'
+    group: '{{ ui_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ ui_base_dir }}' }
+    - { path: '{{ ui_conf_dir }}' }
+    - { path: '{{ ui_log_dir }}' }
+    - { path: '{{ ui_data_dir }}' }
+    
+- name: copy ui zip to server
+  copy:
+    src: '{{ ui_zip_file }}'
+    dest: '{{ ui_base_dir }}/{{ ui_zip_file }}'
+    owner: '{{ ui_user }}'
+    group: '{{ ui_group }}'
+    mode: 0755
+  notify: extract ui zip
+  tags:
+    - patch
+    - ui_patch
+  
+- meta: flush_handlers
+
+- name: create current link for ui
+  file:
+    src: '{{ ui_base_dir }}/{{ versions.app }}'
+    dest: '{{ ui_base_dir }}/current'
+    owner: '{{ ui_user }}'
+    group: '{{ ui_group }}'
+    state: link
+  tags:
+    - patch
+    - ui_patch
+
+- name: set nginx conf for ui
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ ui_user }}'
+    group: '{{ ui_group }}'
+    mode: 0755
+  notify: restart nginx
+  with_items:
+    - { src: 'ui-nginx.conf.j2', dest: '{{ nginx_se_conf_dir }}/ui.conf' }
+  tags:
+    - patch

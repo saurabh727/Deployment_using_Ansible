@@ -1,0 +1,30 @@
+#!/bin/bash
+
+source /etc/profile.d/{{ app_name }}.sh
+
+echo "stopping dc..." && sv stop dc && echo "dc stopped."
+
+echo "stopping dc-executor..." && sv stop dc-executor && echo "dc-executor stopped."
+
+[ "$(rpm -q {{ py_rpm_filename_centos7 }})" ] || [ "$(rpm -q {{ py_rpm_filename_centos6 }})" ] && echo "removing dc dependencies rpm..." \
+                        && rpm -e {{ wmic_rpm_filename }} \
+                        && rpm -e {{ telnet_rpm_filename }} \
+                        && rpm -e {{ navicli_rpm_filename }} \
+                        && rpm -e {{ expect_rpm_filename }} \
+                        && rpm -e {{ nmap_rpm_filename }} \
+                        && echo "dc dependencies rpm removed."
+
+[ "$(rpm -q {{ py_rpm_filename_centos6 }})" ] && echo "removing python rpm..." \
+                        && rpm -e {{ py_rpm_filename_centos6 }} \
+                        && echo "python rpm removed for centos6." \
+                        && echo "removing dc dependencies rpm..." \
+                        && rpm -e {{ tcl6_rpm_filename }} \
+                        && echo "dc dependencies rpm removed."
+
+[ "$(rpm -q {{ py_rpm_filename_centos7 }})" ] && echo "removing python rpm..." \
+                        && rpm -e {{ py_rpm_filename_centos7 }} \
+                        && echo "python rpm removed for centos7." \
+                        && echo "removing dc dependencies rpm..." \
+                        && rpm -e {{ tcl7_rpm_filename }} \
+                        && echo "dc dependencies rpm removed."
+

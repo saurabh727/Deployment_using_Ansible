@@ -1,0 +1,5 @@
+location /fs/ {
+  add_header Cache-Control 'no-cache';
+  alias {{ ui_base_dir }}/current/;
+  try_files $uri /index.html?$query_string;
+}

@@ -1,0 +1,145 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ dc_home_dir }}' }
+    - { path: '{{ dc_log_dir }}' }
+    - { path: '{{ dc_data_dir }}' }
+    - { path: '{{ dc_conf_dir }}' }
+    - { path: '{{ archives_dir }}/rpms' }
+    - { path: '{{ dc_certs_dir }}' }
+
+- name: create executor directories
+  file:
+    path: "{{ runit_sv_dir }}/dc-executor-{{ item }}"
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_sequence: count={{executor_num_workers}}
+  tags: create-executor-directories
+
+- name: copy Python2-{{ versions.python2_centos6 }} rpm  to server
+  copy:
+    src: '{{ py_rpm_filename_centos6 }}.rpm'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  when: ( ansible_os_family == "RedHat" and ansible_distribution_major_version == '6')
+  notify: install python2 centos6 rpm
+
+- name: copy Python2-{{ versions.python2_centos7 }} rpm  to server
+  copy:
+    src: '{{ py_rpm_filename_centos7 }}.rpm'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  when: ( ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
+  notify: install python2 centos7 rpm
+
+- meta: flush_handlers
+
+- name: copy dc archive to remote server
+  copy:
+    src: '{{ dc_whl }}'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: extract dc
+
+- meta: flush_handlers
+
+- name: copy dc conf archive to remote server
+  copy:
+    src: '{{ dc_conf }}'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: extract dc conf
+
+- meta: flush_handlers
+
+- name: copy conf files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_items:
+    - { src: 'dc.sh.j2', dest: '{{ profile_dir }}/dc.sh' }
+    - { src: 'config.yml.j2', dest: '{{ dc_conf_dir }}/config.yml' }
+    - { src: 'dc.conf.j2', dest: '{{ dc_conf_dir }}/meridian.conf' }
+    - { src: 'process-params.sh.j2', dest: '{{ profile_dir }}/process-params.sh' }
+    - { src: 'uninstall-dc.sh.j2', dest: '{{ scripts_dir }}/uninstall-dc.sh' }
+
+- name:  find certificate files
+  find:
+    paths: '{{ certs_dir }}'
+    patterns: "*"
+  register: files_matched
+
+- name: copy certificate files
+  copy:
+    src: '{{ item.path }}'
+    dest: '{{ dc_certs_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+    remote_src: yes
+  with_items:
+    - '{{ files_matched.files }}'
+
+- name: copy rpms to server
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_items:
+    - { src: '{{ expect_rpm_filename }}.rpm', dest: '{{ archives_dir }}/rpms/{{ expect_rpm_filename }}.rpm' }
+    - { src: '{{ navicli_rpm_filename }}.rpm', dest: '{{ archives_dir }}/rpms/{{ navicli_rpm_filename }}.rpm' }
+    - { src: '{{ nmap_rpm_filename }}.rpm', dest: '{{ archives_dir }}/rpms/{{ nmap_rpm_filename }}.rpm' }
+    - { src: '{{ telnet_rpm_filename }}.rpm', dest: '{{ archives_dir }}/rpms/{{ telnet_rpm_filename }}.rpm' }
+    - { src: '{{ wmic_rpm_filename }}.rpm', dest: '{{ archives_dir }}/rpms/{{ wmic_rpm_filename }}.rpm' }
+  notify: install rpms
+
+- name: copy tcl-{{ versions_tcl6 }} rpm  to server
+  copy:
+    src: '{{ tcl6_rpm_filename }}.rpm'
+    dest: '{{ archives_dir }}/rpms'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  when: ( ansible_os_family == "RedHat" and ansible_distribution_major_version == '6')
+  notify: install rpms
+
+- name: copy tcl-{{ versions_tcl7 }} rpm  to server
+  copy:
+    src: '{{ tcl7_rpm_filename }}.rpm'
+    dest: '{{ archives_dir }}/rpms'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  when: ( ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
+  notify: install rpms
+
+- meta: flush_handlers
+
+- name: run dc-registration
+  shell: |
+    su - $SE_USER -c "export LD_LIBRARY_PATH=${SE_EXT}/python2/embedded/lib/; dc_registration register"
+
+- name: run dc-executor task
+  import_tasks: dc-executor.yml
+  when: inventory_hostname in groups['dc']

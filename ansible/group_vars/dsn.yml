@@ -1,0 +1,27 @@
+---
+node_type: DSN
+  
+es_jvm_opts: 12
+
+mb_tags:
+  - DSN
+  
+es_cluster_name: '{{ app_name }}'
+es_coordinate: true
+
+hb_http:
+  - urls:
+      - "https://{{ es_http_url }}"
+    mode: any
+    name: DSN-ES
+    username: '{{ app_user }}'
+    password: ${ES_PWD}
+    ssl: true
+
+#for heartbeat tcp type
+hb_tcp:
+  - hosts: 
+      - '{{ inventory_hostname }}'
+    ports:
+      - '{{ rmq_port }}'
+    name: DSN-RMQ

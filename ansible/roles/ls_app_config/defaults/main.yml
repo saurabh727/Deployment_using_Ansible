@@ -1,0 +1,24 @@
+---
+ls_app_tar_file: 'logstash-{{ versions.elastic }}.tar.gz'
+ls_app_base_dir: '{{ external_dir }}/logstash'
+ls_app_install_dir: '{{ ls_app_base_dir }}/logstash-{{ versions.elastic }}'
+ls_app_log_dir: '{{ log_dir }}/logstash'
+ls_app_data_dir: '{{ data_dir }}/logstash'
+ls_app_settings_dir: '{{ conf_dir }}/logstash'
+ls_app_plugin_dir: '{{ ls_app_install_dir }}/plugins'
+ls_app_zip: 'fx-logstash-{{ versions.app }}.zip'
+
+ls_app_lib_dir: '{{ lib_dir }}/logstash'
+ls_app_current_lib_dir: '{{ ls_app_lib_dir }}/current'
+ls_app_mappings_dir: '{{ ls_app_current_lib_dir }}/mappings'
+
+ls_app_config_dir: '{{ ls_app_current_lib_dir }}/config'
+
+ls_app_plugins_zip: 'fx-logstash-{{ versions.app }}-{{ versions.elastic }}-plugins.zip'
+
+ls_app_es_url: 'http://{{ es_http_url }}'
+
+ls_app_http_host: '127.0.0.1'
+ls_app_http_port: '8085'
+ls_app_http_user: 'firestorm'
+ls_app_http_password: 'FiReStOrM'

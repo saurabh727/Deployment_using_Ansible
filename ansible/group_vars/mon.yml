@@ -1,0 +1,11 @@
+---
+node_type: MON
+  
+es_jvm_opts: 4
+app_jvm_opts: 4
+
+mb_tags:
+  - MON
+
+es_cluster_name: '{{ app_name }}-mon'
+es_coordinate: true

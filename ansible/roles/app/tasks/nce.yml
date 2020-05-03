@@ -1,0 +1,7 @@
+---
+- name: copy upstream file
+  template:
+    src: 'upstream-nginx.conf.j2'
+    dest: '{{ nginx_conf_dir }}//upstream.conf'
+    mode: 0755
+  notify: restart nginx

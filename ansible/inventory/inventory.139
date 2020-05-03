@@ -1,0 +1,44 @@
+[nce]
+172.16.2.139 ansible_become_password='FixStream'
+
+[din]
+172.16.2.191 ansible_become_password='FixStream'
+
+[dsn]
+172.16.2.192 ansible_become_password='FixStream'
+
+[mon]
+172.16.2.151 ansible_become_password='FixStream'
+
+[rmq-leader]
+172.16.2.192 ansible_become_password='FixStream'
+
+[rmq-followers]
+
+[rabbitmq:children]
+rmq-leader
+rmq-followers
+
+[scheduler:children]
+din
+
+[sch-executor:children]
+nce
+din
+
+[sch:children]
+scheduler
+sch-executor
+
+[app-es-masters]
+172.16.2.192 ansible_become_password='FixStream'
+
+[mon-es-masters]
+172.16.2.151 ansible_become_password='FixStream'
+
+[es-masters:children]
+app-es-masters
+mon-es-masters
+
+[dc]
+172.17.254.83

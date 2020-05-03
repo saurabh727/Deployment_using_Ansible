@@ -1,0 +1,42 @@
+---
+- name: install python3 centos6 rpm
+  command: rpm -i --prefix '{{ external_dir }}' '{{ archives_dir }}'/'{{ py_rpm_filename_centos6 }}.rpm'
+  notify: replace python shebang
+
+- name: install python3 centos7 rpm
+  command: rpm -i --prefix '{{ external_dir }}' '{{ archives_dir }}'/'{{ py_rpm_filename_centos7 }}.rpm'
+  notify: replace python shebang
+
+- name: replace python shebang
+  replace: path={{ external_dir }}/python3/embedded/bin/pip3.7  regexp='^#!' replace='#!{{ external_dir }}'
+
+- name: extract scheduler zip
+  unarchive:
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    src: '{{ archives_dir }}/{{ sch_whl }}'  
+    dest: '{{ sch_home_dir }}'
+    remote_src: yes
+    mode: 0755
+  notify: install scheduler  
+     
+- name: install scheduler    
+  args:
+    chdir: '{{ sch_home_dir }}/{{ versions.app }}'
+    executable: /bin/bash
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    export LD_LIBRARY_PATH=${SE_EXT}/python3/embedded/lib/
+    whl_ver=`echo {{ versions.app }}| tr -s "-" "_"`&& {{ external_dir }}/python3/embedded/bin/pip3.7 install -I --no-index --find-links=libs fx_scheduler-$whl_ver-py3-none-any.whl
+
+- name: restart scheduler
+  runit:
+    name=scheduler
+    state=restarted
+    service_dir='{{ runit_service_dir }}'
+
+- name: restart sch-executor
+  runit:
+    name=sch-executor
+    state=restarted
+    service_dir='{{ runit_service_dir }}'

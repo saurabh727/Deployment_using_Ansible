@@ -1,0 +1,81 @@
+status = error
+name = PropertiesConfig
+property.logdir = ${env:SE_LOG:-/tmp}/{{ app_name }}
+property.apploglevel = ${env:APP_LOG_LEVEL:-INFO}
+property.sysloglevel = ${env:SYS_LOG_LEVEL:-WARN}
+property.logpattern = %d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1.}:%L - %m%n
+ 
+#appenders
+appenders = system, app, error
+
+#System Appender
+appender.system.type = RollingFile
+appender.system.name = SYSTEM
+appender.system.fileName = ${logdir}/{{ app_name }}-system.log
+appender.system.filePattern = ${logdir}/system-%d{MM-dd-yy}-%i.log.gz
+appender.system.layout.type = PatternLayout
+appender.system.layout.pattern = ${logpattern}
+appender.system.policies.type = Policies
+appender.system.policies.time.type = TimeBasedTriggeringPolicy
+appender.system.policies.time.interval = 1
+appender.system.policies.time.modulate = true
+appender.system.policies.size.type = SizeBasedTriggeringPolicy
+appender.system.policies.size.size=100MB
+appender.system.strategy.type = DefaultRolloverStrategy
+appender.system.strategy.max = 3
+appender.system.filter.threshold.type = ThresholdFilter
+appender.system.filter.threshold.level = debug
+
+#Application Logger
+appender.app.type = RollingFile
+appender.app.name = APPLICATION
+appender.app.fileName = ${logdir}/{{ app_name }}-app.log
+appender.app.filePattern = ${logdir}/app-%d{MM-dd-yy}-%i.log.gz
+appender.app.layout.type = PatternLayout
+appender.app.layout.pattern = ${logpattern}
+appender.app.policies.type = Policies
+appender.app.policies.time.type = TimeBasedTriggeringPolicy
+appender.app.policies.time.interval = 1
+appender.app.policies.time.modulate = true
+appender.app.policies.size.type = SizeBasedTriggeringPolicy
+appender.app.policies.size.size=100MB
+appender.app.strategy.type = DefaultRolloverStrategy
+appender.app.strategy.max = 3
+appender.app.filter.threshold.type = ThresholdFilter
+appender.app.filter.threshold.level = debug
+
+
+#Error Logger
+appender.error.type = RollingFile
+appender.error.name = ERROR
+appender.error.fileName = ${logdir}/{{ app_name }}-error.log
+appender.error.filePattern = ${logdir}/error-%d{MM-dd-yy}-%i.log.gz
+appender.error.layout.type = PatternLayout
+appender.error.layout.pattern = ${logpattern}
+appender.error.policies.type = Policies
+appender.error.policies.time.type = TimeBasedTriggeringPolicy
+appender.error.policies.time.interval = 1
+appender.error.policies.time.modulate = true
+appender.error.policies.size.type = SizeBasedTriggeringPolicy
+appender.error.policies.size.size=100MB
+appender.error.strategy.type = DefaultRolloverStrategy
+appender.error.strategy.max = 3
+appender.error.filter.threshold.type = ThresholdFilter
+appender.error.filter.threshold.level = warn
+
+
+#loggers
+loggers = app
+
+logger.app.name = com.fixstream
+logger.app.level = ${apploglevel}
+logger.app.additivity = false
+logger.app.appenderRef.app.ref = APPLICATION
+logger.app.appenderRef.error.ref = ERROR
+
+
+rootLogger.level = ${sysloglevel}
+rootLogger.appenderRef.system.ref = SYSTEM
+rootLogger.appenderRef.error.ref = ERROR
+
+

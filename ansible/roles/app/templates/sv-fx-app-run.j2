@@ -1,0 +1,6 @@
+#!/bin/sh
+exec 2>&1
+
+source /etc/profile.d/{{ app_name }}.sh
+
+exec chpst -u $SE_USER ${SE_BIN}/java -Xms{{ app_jvm_opts }}g -Xmx{{ app_jvm_opts }}g -cp ${SE_LIB}/app/fx-app-current.jar:${SE_LIB}/app/app-libs/*:. com.fixstream.firestorm.FireStormApplication --spring.config.location=file:${SE_CONF}/app/app.properties 2>&1 >> ${SE_LOG}/app/service_run.log

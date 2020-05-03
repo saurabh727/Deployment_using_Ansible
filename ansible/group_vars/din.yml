@@ -1,0 +1,54 @@
+---
+node_type: DIN
+
+es_jvm_opts: 6
+app_jvm_opts: 6
+ls_jvm_opts: 6
+
+mb_tags:
+  - DIN
+
+es_cluster_name: '{{ app_name }}'
+es_coordinate: true
+
+pipelines:
+  - id: ingestion
+    path: '{{ lib_dir }}/logstash/current/config/ingestion/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: ingestion-kafka
+    path: '{{ lib_dir }}/logstash/current/config/ingestion-kafka/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: preProcess
+    path: '{{ lib_dir }}/logstash/current/config/pre-process/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: persistence
+    path: '{{ lib_dir }}/logstash/current/config/persistence/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: audit
+    path: '{{ lib_dir }}/logstash/current/config/audit/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+
+hb_http:
+  - urls:
+      - "https://{{ es_http_url }}"
+    mode: any
+    name: DIN-ES
+    username: '{{ app_user }}'
+    password: ${ES_PWD}
+    ssl: true
+
+#for heartbeat tcp type
+#hb_tcp:
+#  - hosts: 
+#      - ''
+#    ports: []

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export RMQ_URL={{ groups["rabbitmq"] | join(",") }}
+export RMQ_USER={{ app_user }}
+export LS_MAPPING_DIR=${SE_LIB}/logstash/current/mappings
+{% if audit_service_node == 'managementCluster' %}
+export AUDITSERVICE_ES_URL={{ groups["mon"] | random }}:{{ es_http_port }}
+{% else %}
+export AUDITSERVICE_ES_URL={{ es_http_url }}
+{% endif %}

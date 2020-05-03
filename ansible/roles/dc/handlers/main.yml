@@ -1,0 +1,50 @@
+---
+- name: extract dc
+  unarchive:
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    src: '{{ archives_dir }}/{{ dc_whl }}'
+    dest: '{{ dc_home_dir }}'
+    remote_src: yes
+    mode: 0755
+  notify: install dc
+
+- name: extract dc conf
+  unarchive:
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    src: '{{ archives_dir }}/{{ dc_conf }}'
+    dest: '{{ dc_conf_dir }}'
+    remote_src: yes
+    mode: 0755
+
+- name: install python2 centos6 rpm
+  command: rpm -i --prefix '{{ external_dir }}' '{{ archives_dir }}'/'{{ py_rpm_filename_centos6 }}.rpm'
+  notify: replace python shebang
+
+- name: install python2 centos7 rpm
+  command: rpm -i --prefix '{{ external_dir }}' '{{ archives_dir }}'/'{{ py_rpm_filename_centos7 }}.rpm'
+  notify: replace python shebang
+
+- name: replace python shebang
+  replace: path={{ external_dir }}/python2/embedded/bin/pip2.7 regexp='^#!' replace='#!{{ external_dir }}'
+
+- name: install dc
+  args:
+    chdir: '{{ dc_home_dir }}/{{ versions.app }}'
+    executable: /bin/bash
+  shell: |
+    export LD_LIBRARY_PATH={{ external_dir }}/python2/embedded/lib; {{ external_dir }}/python2/embedded/bin/pip2.7 install -I --no-index --find-links=libs *.whl
+
+- name: install rpms
+  command: rpm -Uivh --replacepkgs --force --replacefiles '{{ archives_dir }}'/rpms/*.rpm
+
+
+- name: restart dc-executor
+  runit:
+    name: "dc-executor-{{ item }}"
+    state: restarted
+    enabled: yes
+    service_dir: '{{ runit_service_dir }}'
+  with_sequence: count={{executor_num_workers}}
+  tags: restart-dc-executor

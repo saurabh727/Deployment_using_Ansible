@@ -1,0 +1,11 @@
+---
+- name: copy nginx conf
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart nginx
+  with_items:
+    - { src: 'app.conf.j2', dest: '/etc/nginx/conf.d/{{ app_name }}.conf' }

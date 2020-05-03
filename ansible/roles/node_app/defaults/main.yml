@@ -1,0 +1,11 @@
+---
+na_base_dir: '{{ lib_dir }}/node-app'
+na_version: '{{ versions.app }}'
+na_tar_file: 'fx-node-app-{{ versions.app }}.zip'
+na_install_dir: '{{ na_base_dir }}/{{ versions.app }}'
+na_conf_dir: '{{ conf_dir }}/node-app'
+na_log_dir: '{{ log_dir }}/node-app'
+na_data_dir: '{{ data_dir }}/node-app'
+na_err_log: '{{ log_dir }}/node-app/error.log'
+na_out_log: '{{ log_dir }}/node-app/out.log'
+na_pid_file: '{{ run_dir }}/node-app.pid'

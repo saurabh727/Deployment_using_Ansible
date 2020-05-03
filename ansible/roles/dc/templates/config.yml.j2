@@ -1,0 +1,19 @@
+default:
+  rabbitmq:
+{% if rmq_ssl %}
+    addresses: {{ rmq_host_ip }}:{{ rmq_ssl_port }}
+{% else %}
+    addresses: {{ rmq_host_ip }}:{{ rmq_port }}
+{% endif %}
+    virtual_host: dc
+    default_heartbeat: 60
+    use_ssl: true
+    ca_certs: ca.crt
+    client_cert: instance.crt
+    client_key: instance.key
+    ca_cert_location: {{ dc_certs_dir }}/
+    dynaconf_merge: true
+
+  logging:
+    conf_path: {{ dc_conf_dir }}/logging.conf
+    log_dir: {{ dc_log_dir  }}

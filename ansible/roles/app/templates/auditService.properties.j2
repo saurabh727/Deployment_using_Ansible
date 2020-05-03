@@ -1,0 +1,30 @@
+logging.config=${SE_CONF}/app/log4j2.properties
+
+dal.es.primary.clusterPassword={{ es_app_password }}
+dal.es.secondary.clusterPassword={{ es_app_password }}
+
+app.rest.mixin.csv=false
+app.rest.mixin.ui=false
+
+app.hazelcast.cluster.enabled=false
+
+app.rmq.enabled=false
+app.jms.wls.enabled=false
+app.scheduler.enabled=true
+app.sftp.enabled=false
+
+app.authserver.enabled=false
+app.authserver.db.enabled=false
+app.authserver.ldap.enabled=false
+
+app.gpg.enabled=false
+
+app.ldap.enabled=false
+
+app.freemarker.enabled=false
+
+server.compression.enabled=false
+
+app.authentication.tokenAttrName=com.fixstream.firestorm.services.impl
+
+app.wildcard.all=__ALL__

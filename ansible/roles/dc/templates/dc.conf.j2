@@ -1,0 +1,6 @@
+[dc_registration_data]
+authentication_url = https://{{ groups["nce"] | random }}/api/resource/sourceSystems
+access_token_file_path = {{ dc_conf_dir }}/access_token.txt
+rmq_info_url = https://{{ groups["nce"] | random }}/api/resource/search/sourceSystems
+customer_name = {{ customer_name }}
+dc_name = {{ dc_name }}

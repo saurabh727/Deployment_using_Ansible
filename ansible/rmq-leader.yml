@@ -1,0 +1,8 @@
+---
+- hosts: rmq-leader
+  roles: 
+    - role: rabbitmq
+  vars:
+    - ansible_become: yes
+    - ansible_become_user: 'root'
+    - ansible_become_method: su

@@ -1,0 +1,24 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path:  '{{ es_lib_dir }}/{{ versions.app }}/ilm' }
+
+- name: copy polices to server
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: initialise ilm policies in elasticsearch
+  with_items:
+    - { src: 'ilm-policy/event-ilm.json.j2', dest: '{{ es_lib_dir }}/{{ versions.app }}/ilm/event-ilm.json' }
+    - { src: 'ilm-policy/inv-ilm.json.j2', dest: '{{ es_lib_dir }}/{{ versions.app }}/ilm/inv-ilm.json' }
+
+- meta: flush_handlers

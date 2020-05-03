@@ -1,0 +1,19 @@
+---
+- hosts: nce
+  roles: 
+    - role: nginx_app_config
+    - role: elasticsearch
+    - role: kibana
+    - role: ls_app_config
+    - role: app
+    - role: ui
+    - role: node_app
+    - role: ap_scheduler
+    
+  vars:
+    - es_data_node: 'false'
+    - es_watcher_enable: 'false'
+    - es_watcher_email_enable: 'false'
+    - ansible_become: yes
+    - ansible_become_user: 'root'
+    - ansible_become_method: su

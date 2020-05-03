@@ -1,0 +1,9 @@
+---
+- name: extract node_app tar
+  unarchive:
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    src: '{{ archives_dir }}/{{ na_tar_file }}'
+    dest: '{{ na_base_dir }}'
+    remote_src: yes
+    mode: 0755

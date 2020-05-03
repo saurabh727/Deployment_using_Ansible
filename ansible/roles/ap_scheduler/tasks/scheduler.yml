@@ -1,0 +1,29 @@
+---
+- name: copy scheduler run file
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart scheduler
+  when:
+  with_items:
+    - { src: 'sv-scheduler-run.j2', dest: '{{ runit_sv_dir }}/scheduler/run' }
+
+- name: runit sv dir to service dir
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: link
+  with_items:
+    - { src: '{{ runit_sv_dir }}/scheduler', dest: '{{ runit_service_dir }}/scheduler' }
+
+- name: scheduler started
+  runit:
+    name=scheduler
+    state=started
+    enabled=yes
+    service_dir='{{ runit_service_dir }}'

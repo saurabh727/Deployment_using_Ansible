@@ -1,0 +1,22 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ conf_dir }}/heartbeat/monitors.d' }
+  when: inventory_hostname in groups['mon']
+
+- name: copy heartbeat file to tiles server
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  delegate_to: '{{ groups["mon"] | random }}'
+  with_items:
+    - { src: 'heartbeat.yml.j2', dest: '{{ conf_dir }}/heartbeat/monitors.d/{{ inventory_hostname }}.yml' }

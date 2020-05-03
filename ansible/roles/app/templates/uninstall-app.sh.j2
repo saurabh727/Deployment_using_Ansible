@@ -1,0 +1,9 @@
+#!/bin/bash
+
+source /etc/profile.d/{{ app_name }}.sh
+
+echo "stopping app..." && sv stop app && echo "app stopped."
+
+[ -f /etc/rc.d/init.d/app ] && echo "deleting app files..." \
+                                            && rm -f /etc/rc.d/init.d/app \
+                                            && echo "app files deleted."

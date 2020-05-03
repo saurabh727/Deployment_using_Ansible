@@ -1,0 +1,102 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ sch_home_dir }}' }
+    - { path: '{{ sch_log_dir }}' }
+    - { path: '{{ sch_conf_dir }}' }
+    - { path: '{{ runit_sv_dir }}/scheduler' }
+    - { path: '{{ runit_sv_dir }}/sch-executor' }
+    - { path:  '{{ sch_certs_dir }}' }
+
+- name: copy Python3-{{ versions.python_centos6 }} rpm  to server
+  copy:
+    src: '{{ py_rpm_filename_centos6 }}.rpm'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  when: ( ansible_os_family == "RedHat" and ansible_distribution_major_version == '6')
+  notify: install python3 centos6 rpm
+
+- name: copy Python3-{{ versions.python_centos7 }} rpm  to server
+  copy:
+    src: '{{ py_rpm_filename_centos7 }}.rpm'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  when: ( ansible_os_family == "RedHat" and ansible_distribution_major_version == '7')
+  notify: install python3 centos7 rpm
+
+- meta: flush_handlers
+
+- name: copy env scripts for scheduler
+  copy:
+    src: 'env.sh'
+    dest: '{{ profile_dir }}/ap_scheduler.sh'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755    
+
+- name: copy scheduler archive to remote server
+  copy:
+    src: '{{ sch_whl }}'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: 
+    - extract scheduler zip    
+  tags:
+    - patch
+    - apsch_patch
+    
+- meta: flush_handlers 
+  
+- name:  find certificate files
+  find:
+    paths: '{{ certs_dir }}'
+    patterns: "*"
+  register: files_matched
+
+- name: copy certificate files
+  copy:
+    src: '{{ item.path }}'
+    dest: '{{ sch_certs_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+    remote_src: yes
+  with_items:
+    - '{{ files_matched.files }}'
+
+- name: copy conf files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart scheduler
+  with_items:
+    - { src: 'config.yml.j2', dest: '{{ sch_conf_dir }}/config.yml' }
+    - { src: 'secrets.yml.j2', dest: '{{ sch_conf_dir }}/.secrets.yml' }
+    - { src: 'logging.conf.j2', dest: '{{ sch_conf_dir }}/logging.conf' }
+    - { src: 'uninstall-scheduler.sh.j2', dest: '{{ scripts_dir }}/uninstall-scheduler.sh' }
+  tags:
+    - patch
+    - apsch_patch
+    
+- name: run scheduler task
+  import_tasks: scheduler.yml
+  when: inventory_hostname in groups['scheduler']
+
+- name: run sch-executor task
+  import_tasks: sch-executor.yml
+  when: inventory_hostname in groups['sch-executor']

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+source /etc/profile.d/{{ app_name }}.sh
+
+alias {{ app_alias_name }}aconf="cd $SE_CONF/app"
+alias {{ app_alias_name }}alog="cd $SE_LOG/app"
+alias {{ app_alias_name }}adata="cd $SE_DATA/app"
+alias {{ app_alias_name }}alib="cd $SE_LIB/app"
+
+alias tailapp="tail -f $SE_LOG/{{ app_name }}/{{ app_name }}-app.log"
+alias tailae="tail -f $SE_LOG/{{ app_name }}/{{ app_name }}-error.log"
+
+alias lessapp="less $SE_LOG/{{ app_name }}/{{ app_name }}-app.log"
+alias lessae="less $SE_LOG/{{ app_name }}/{{ app_name }}-error.log"
+
+alias fxpython3="$SE_EXT/python3/embedded/bin/python3.7"
+alias fxpip3="$SE_EXT/python3/embedded/bin/pip3.7"
+
+alias {{ app_alias_name }}python2="$SE_EXT/python2/embedded/bin/python2.7"
+alias {{ app_alias_name }}pip2="$SE_EXT/python2/embedded/bin/pip2.7"
+
+alias {{ app_alias_name }}dclogs="cd $NETRA_LOG_DIR"
+alias {{ app_alias_name }}dcconf="cd $NETRA_CONF_DIR"
+alias {{ app_alias_name }}dcdata="cd $NETRA_DATA_DIR"
+
+
+alias {{ app_alias_name }}dcregister="su - $SE_USER -c 'export LD_LIBRARY_PATH=${SE_EXT}/python2/embedded/lib/; dc_registration register'"
+alias {{ app_alias_name }}dcderegister="su - $SE_USER -c 'export LD_LIBRARY_PATH=${SE_EXT}/python2/embedded/lib/; dc_registration deregister'"
+alias {{ app_alias_name }}dcpkg="cd $SE_EXT/python2/embedded/lib/python2.7/site-packages/"

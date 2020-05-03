@@ -1,0 +1,30 @@
+{% if hb_http is defined %}
+{% for http in hb_http %}
+- type: http
+  name: {{ http.name }}
+  schedule: '@every 30s'
+  urls: {{ http.urls | to_json }}
+  mode: {{ http.mode }}
+{% if http.username is defined and http.password is defined %}
+  username: {{ http.username }}
+  password: {{ http.password }}
+{% endif %}
+{% if http.ssl %}
+  ssl:
+    verification_mode: none
+    certificate_authorities: ['{{ conf_dir }}/heartbeat/certs/ca.crt']
+{% endif %}
+
+{% endfor %}
+{% endif %}
+
+{% if hb_tcp is defined %}
+{% for tcp in hb_tcp %}
+- type: tcp
+  name: {{ tcp.name }}
+  schedule: '@every 30s'
+  hosts: {{ tcp.hosts | to_json }}
+  ports: {{ tcp.ports | to_json }}
+  
+{% endfor %}
+{% endif %}

@@ -1,0 +1,8 @@
+---
+- hosts: dc
+  roles:
+    - role: dc
+  vars:
+    - ansible_become: yes
+    - ansible_become_user: 'root'
+    - ansible_become_method: su

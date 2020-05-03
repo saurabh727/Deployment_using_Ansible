@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export RMQ_SSL={{ rmq_ssl | to_json }}
+{% if rmq_ssl %}
+export RMQ_PORT={{ rmq_ssl_port }}
+{% else %}
+export RMQ_PORT={{ rmq_port }}
+{% endif -%}
+export LS_MAPPING_DIR=${SE_LIB}/logstash/current/mappings

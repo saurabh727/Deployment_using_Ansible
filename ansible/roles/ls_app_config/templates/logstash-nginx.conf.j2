@@ -1,0 +1,4 @@
+location /event/ {
+  proxy_pass http://{{ ls_app_http_host }}:{{ ls_app_http_port }};
+  proxy_set_header impss_source $remote_addr;
+}

@@ -1,0 +1,8 @@
+---
+sch_home_dir: '{{ lib_dir }}/scheduler'
+py_rpm_filename_centos6: 'python-{{ versions.python3_centos6 }}'
+py_rpm_filename_centos7: 'python-{{ versions.python3_centos7 }}'
+sch_log_dir: '{{ log_dir }}/scheduler'
+sch_conf_dir: '{{ conf_dir }}/scheduler'
+sch_certs_dir: '{{ sch_conf_dir }}/certs/'
+sch_whl: 'fx-scheduler-{{ versions.app }}.zip'

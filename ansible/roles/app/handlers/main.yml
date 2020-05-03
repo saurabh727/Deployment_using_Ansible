@@ -1,0 +1,15 @@
+---
+- name: restart app
+  runit:
+    name=app
+    state=restarted
+    service_dir='{{ runit_service_dir }}'
+    
+- name: unzip libs file
+  unarchive:
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    src: '{{ archives_dir }}/{{ app_lib_file }}'
+    dest: '{{ app_base_dir }}'
+    remote_src: yes
+    mode: 0755

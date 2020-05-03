@@ -1,0 +1,100 @@
+default:
+
+  elasticsearch:
+    host: ["{{ inventory_hostname }}"]
+    port: {{ es_http_port }}
+    use_ssl: true
+    verify_certs: true
+    ca_certs: ca.crt
+    client_cert: instance.crt
+    client_key: instance.key
+    ca_cert_location: {{ sch_certs_dir }}/
+    # bulk op config options
+    max_chunk_bytes: 20971520
+    chunk_size: 10000
+    scroll_size: 10000
+    thread_count: 4
+    tqueue_size: 4
+    # default ES timeout
+    default_timeout: 30
+    # search timeout
+    refresh_timeout: 60
+    runtime_retries: 5
+    dynaconf_merge: true
+
+  rabbitmq:
+{% if rmq_ssl %}
+    addresses: {{ rmq_host_ip }}:{{ rmq_ssl_port }}
+{% else %}
+    addresses: {{ rmq_host_ip }}:{{ rmq_port }}
+{% endif %}
+    virtual_host: scheduler
+    default_heartbeat: 60
+    # blocked_connection_timeout in sec
+    cblocked_timeout: 10
+    use_ssl: true
+    ca_certs: ca.crt
+    client_cert: instance.crt
+    client_key: instance.key
+    ca_cert_location: {{ sch_certs_dir }}/
+    dynaconf_merge: true
+
+  rmq_request:
+    lock_queue_name: sch-app-lock
+    queue_name: sch-job-request
+    prefetch_count: 1
+    dynaconf_merge: true
+
+  dramatiq:
+    queue_name: scheduler_executor
+
+  scheduler:
+    coalesce: false
+    max_instances: 3
+    misfire_grace_time: 3600
+    thread_pool_executor: 20
+    process_pool_executor: 20
+    index_name: fx_apscheduler
+    timezone: UTC
+    batch_jobs_enabed: true
+    batch_jobs:
+      executors:
+        default:
+          executor_batch_jobs: true
+          executor_batch_size: 1000
+          publisher_batch_jobs: true
+          publisher_batch_size: 1000
+
+  http_service:
+    host: localhost
+    port: 8080
+    secure: false
+    timeout_sec: 5
+    retries: 1
+    def_method: put
+    discovery:
+      api_uri: /api/resource/jobruns/all
+      method: put
+    jobs_status:
+      api_uri: /api/resource/jobSchedules/all
+      method: put
+
+  logging:
+    conf_path: {{ sch_conf_dir }}/logging.conf
+    log_dir: {{ sch_log_dir  }}
+
+  smtp:
+    mail_enabled: true
+    app_host: {{ inventory_hostname }}
+    host: {{ mail_host }}
+    port: {{ mail_port }}
+    username: {{ mail_user }}
+    password: {{ mail_password }}
+    from_email: {{ mail_from }}
+    to_emails: {{ mail_to }}
+    stop_subject: Scheduler is stopped
+    stop_message: Scheduler is stopped.
+    start_subject: Scheduler is started
+    start_message: Scheduler is started
+    fail_subject: Scheduler failed to start
+    fail_message: Scheduler failed to start.

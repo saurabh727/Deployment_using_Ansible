@@ -1,0 +1,16 @@
+#!/bin/sh
+ulimit -n 32768
+exec 2>&1
+
+source /etc/profile.d/{{ app_name }}.sh
+
+exec chpst -u $SE_USER env LD_LIBRARY_PATH=${SE_EXT}/python2/embedded/lib/ \
+                                ${DC_BIN}/python2.7 -m celery worker --events \
+                                --without-heartbeat --without-gossip --without-mingle -Ofair \
+                                --autoscale=$EXECUTOR_MAX_WORKERS,$EXECUTOR_MIN_WORKERS \
+                                --loglevel=$DC_LOG_LEVEL \
+                                --max-tasks-per-child=$EXECUTOR_MAX_TASKS_PER_CHILD \
+                                --app={{ executor_app }} \
+                                --pidfile=${SE_EXT}/dc-executor-{{ item }}.pid \
+                                --logfile={{ dc_log_dir }}/dc-executor-{{ item }}.log \
+                                --hostname=dc-executor-{{ item }}

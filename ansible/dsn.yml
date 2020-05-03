@@ -1,0 +1,12 @@
+---
+- hosts: dsn
+  roles: 
+    - role: elasticsearch
+    
+  vars:
+    - es_data_node: 'true'
+    - es_watcher_enable: 'false'
+    - es_watcher_email_enable: 'false'
+    - ansible_become: yes
+    - ansible_become_user: 'root'
+    - ansible_become_method: su

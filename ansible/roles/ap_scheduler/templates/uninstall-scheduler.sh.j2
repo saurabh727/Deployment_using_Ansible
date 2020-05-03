@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source /etc/profile.d/{{ app_name }}.sh
+
+echo "stopping scheduler..." && sv stop scheduler && echo "scheduler stopped."
+
+echo "stopping sch-executor..." && sv stop sch-executor && echo "sch-executor stopped."
+
+[ "$(rpm -q {{ py_rpm_filename_centos6 }})" ] && echo "removing python rpm..." \
+                        && rpm -e {{ py_rpm_filename_centos6 }} \
+                        && echo "python rpm removed for centos6."
+
+[ "$(rpm -q {{ py_rpm_filename_centos7 }})" ] && echo "removing python rpm..." \
+                        && rpm -e {{ py_rpm_filename_centos7 }} \
+                        && echo "python rpm removed for centos7."

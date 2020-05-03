@@ -1,0 +1,18 @@
+location /api/ {
+  proxy_pass http://localhost:8080/api/;
+  add_header nce-host {{ inventory_hostname }}:{{ ansible_hostname }};
+}
+
+location /oauth/ {
+  proxy_pass http://localhost:8080/oauth/;
+  add_header nce-host {{ inventory_hostname }}:{{ ansible_hostname }};
+}
+
+location /status {
+  proxy_pass http://localhost:8080;
+  add_header nce-host {{ inventory_hostname }}:{{ ansible_hostname }};
+}
+
+location / {
+  proxy_pass http://localhost/fs/;
+}

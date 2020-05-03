@@ -1,0 +1,7 @@
+{% for pipeline in pipelines %}
+- pipeline.id: {{ pipeline.id }}
+  path.config: "{{ pipeline.path }}"
+  pipeline.workers: {{ pipeline.pipeline_workers }}
+  pipeline.batch.size: {{ pipeline.pipeline_batch_size }}
+  pipeline.batch.delay: {{ pipeline.pipeline_batch_delay }}
+{% endfor %}

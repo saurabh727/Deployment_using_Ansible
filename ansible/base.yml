@@ -1,0 +1,9 @@
+---
+- hosts: all
+  roles:
+    - role: metricbeat
+    - role: filebeat
+  vars:
+    - ansible_become: yes
+    - ansible_become_user: 'root'
+    - ansible_become_method: su

@@ -1,0 +1,16 @@
+---
+- hosts: din
+  roles: 
+    - nginx_app_config
+    - elasticsearch
+    - ls_app_config
+    - app
+    - ap_scheduler
+ 
+  vars:
+    - es_data_node: 'false'
+    - es_watcher_enable: 'false'
+    - es_watcher_email_enable: 'false'
+    - ansible_become: yes
+    - ansible_become_user: 'root'
+    - ansible_become_method: su

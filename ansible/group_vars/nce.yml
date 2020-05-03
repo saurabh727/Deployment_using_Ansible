@@ -1,0 +1,60 @@
+---
+node_type: NCE
+
+es_jvm_opts: 6
+app_jvm_opts: 6
+ls_jvm_opts: 6
+
+mb_tags:
+  - NCE
+
+es_cluster_name: '{{ app_name }}'
+es_coordinate: true
+
+pipelines:
+  - id: normalization
+    path: '{{ lib_dir }}/logstash/current/config/normalization/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: postProcess
+    path: '{{ lib_dir }}/logstash/current/config/post-process/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: nbrRenormalization
+    path: '{{ lib_dir }}/logstash/current/config/nbrRenormalization/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+  - id: renormalization
+    path: '{{ lib_dir }}/logstash/current/config/renormalization/*.conf'
+    pipeline_workers: 1
+    pipeline_batch_size: 125
+    pipeline_batch_delay: 50
+
+hb_http:
+  - urls:
+      - "https://{{ es_http_url }}"
+    mode: any
+    name: NCE-ES
+    username: '{{ app_user }}'
+    password: ${ES_PWD}
+    ssl: true
+  - urls:
+      - "http://{{ inventory_hostname }}/status"
+    mode: any
+    name: NCE-APP
+    ssl: false
+  - urls:
+      - "http://{{ inventory_hostname }}"
+    mode: any
+    name: NCE-UI
+    ssl: false
+
+#for heartbeat tcp type
+#hb_tcp:
+#  - hosts: 
+#      - '{{ inventory_hostname }}'
+#    ports:
+#      - 5672

@@ -1,0 +1,139 @@
+---
+app_user: fixstream
+app_group: fixstream
+app_name: firestorm
+app_alias_name: fx
+app_ansible_roles: app scheduler dc
+app_services: app sch-executor scheduler dc-executors
+
+install_dir: /opt
+
+mail_organization: exchange_account
+mail_profile: outlook
+mail_host: smtp.office365.com
+mail_port: 587
+mail_user: jenkins@fixstream.com
+mail_password: FixStream123
+mail_smtp_auth: 'true'
+mail_smtp_tls_enable: 'true'
+mail_smtp_tls_required: 'true'
+
+mail_from: jenkins@fixstream.com
+mail_to: example@fixstream.com
+mail_cc: example@fixstream.com
+mail_bcc: example@fixstream.com
+
+es_backup_path:
+
+home_dir: '{{ install_dir }}/{{ app_name }}'
+bin_dir: '{{ home_dir }}/bin'
+conf_dir: '{{ home_dir }}/etc'
+profile_dir: '{{ home_dir }}/etc/profile.d'
+data_dir: '{{ home_dir }}/var/data'
+log_dir: '{{ home_dir }}/var/log'
+run_dir: '{{ home_dir }}/var/run'
+runit_service_dir: '{{ home_dir }}/etc/service'
+runit_sv_dir: '{{ home_dir }}/etc/sv'
+lib_dir: '{{ home_dir }}/lib'
+external_dir: '{{ home_dir }}/external'
+archives_dir: '{{ home_dir }}/archives'
+scripts_dir: '{{ home_dir }}/scripts'
+certs_dir: '{{ data_dir }}/certs'
+task_dir: '{{ data_dir }}/tasks'
+
+#audit_service_node options  are ["managementCluster","mainCluster"]
+audit_service_node: mainCluster
+
+rmq_host_ip: '{{ groups["rmq-leader"] | first }}'
+rmq_ssl: false
+rmq_port: '5672'
+rmq_ssl_port: '5671'
+rmq_plugins: 'rabbitmq_management,rabbitmq_shovel,rabbitmq_consistent_hash_exchange,rabbitmq_message_deduplication,rabbitmq_delayed_message_exchange'
+rmq_management_port: '15672'
+
+nginx_ssl: false
+
+es_transport_port: 9300
+es_http_port: 9200
+es_kibana_port: 5601
+es_transport_url: '{{ inventory_hostname }}:{{ es_transport_port }}'
+es_http_url: '{{ inventory_hostname if es_coordinate else groups["dsn"] | random }}:{{ es_http_port }}'
+es_username: '{{ app_user }}'
+es_mapping_zip: 'fx-es-{{ versions.app }}.zip'
+es_kibana_user: kibana
+es_logstash_user: logstash_system
+es_beats_user: beats_system
+es_metricbeat_user: metricbeat
+es_monitor_user: remote_monitoring_user
+
+es_users:
+  - username: '{{ app_user }}'
+    password: '{{ es_app_password }}'
+    roles:
+      - '{{ app_user }}-full'
+      - 'kibana_user'
+      - 'kibana_system'
+      - 'monitoring_user'
+    enable: 'true'
+  - username: '{{ app_user }}_read'
+    password: '{{ es_read_password }}'
+    roles:
+      - 'fx_read'
+      - 'kibana_user'
+    enable: 'true'
+  - username: '{{ app_user }}_index'
+    password: '{{ es_index_password }}'
+    roles:
+      - 'fx_index'
+      - 'fx_read'
+      - 'kibana_user'
+    enable: 'true'
+  - username: 'dashboard'
+    password: 'FSdsh123!'
+    roles:
+      - 'kibana_dashboard_only'
+      - 'kibana_user'
+      - 'kibana_system'
+      - '{{ app_user }}-full'
+    enable: 'true'
+
+es_roles:
+  - role: '{{ app_user }}-full'
+    cluster:
+      - 'all'
+    indices:
+      - '*'
+    privileges:
+      - 'all'
+  - role: 'fx_index'
+    cluster:
+      - 'monitor'
+    indices:
+      - 'fx_*'
+    privileges:
+      - 'index'
+  - role: 'fx_read'
+    cluster:
+      - 'monitor'
+    indices:
+      - 'fx_*'
+    privileges:
+      - 'read'
+
+beats:
+  rollover_max_size: 1GB
+  delete_min_age: 7d
+
+event_ilm_rollover: 2GB
+event_ilm_index_age: 7d
+inv_ilm_rollover: 2GB
+inv_ilm_index_age: 7d
+
+executor_max_tasks_per_child: 100
+executor_max_workers: 6
+executor_min_workers: 5
+executor_num_workers: 10
+executor_app: "meridian_workers.celeryd.worker.app:worker_app"
+customer_name: 'fixstream'
+dc_name: 'dc'
+log_level: 'WARN'

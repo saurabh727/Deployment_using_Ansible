@@ -1,0 +1,7 @@
+---
+- import_playbook: base.yml
+- import_playbook: rmq-leader.yml
+- import_playbook: rmq-followers.yml
+- import_playbook: dsn.yml
+- import_playbook: din.yml
+- import_playbook: nce.yml

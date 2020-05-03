@@ -1,0 +1,7 @@
+upstream dins {
+
+	{% for host in groups['din'] %}
+	server {{ host }};
+	{% endfor %}
+    
+}

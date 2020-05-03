@@ -1,0 +1,18 @@
+---
+- name: unarchive app file
+  unarchive:
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    src: '{{ archives_dir }}/{{ ls_app_zip }}'
+    dest: '{{ ls_app_lib_dir }}'
+    remote_src: yes
+  
+- name: install plugins for logstash
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    {{ ls_app_install_dir }}/bin/logstash-plugin install file://{{ ls_app_plugin_dir }}/{{ ls_app_plugins_zip }}
+  notify: restart logstash
+  vars:
+    ansible_become: yes
+    ansible_become_user: '{{ app_user }}'
+    ansible_become_password: '{{ es_app_password }}'

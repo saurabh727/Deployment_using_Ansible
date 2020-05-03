@@ -1,0 +1,339 @@
+Name,DisplayName,Type,Visibility
+addressInfo.addressId,Address ID,String,FALSE
+addressInfo.cityId,City ID,String,FALSE
+addressInfo.country,Country,String,TRUE
+addressInfo.countryCode,Country Code,String,TRUE
+addressInfo.county,County,String,TRUE
+addressInfo.latitude,Latitude,String,TRUE
+addressInfo.locality,Locality,String,TRUE
+addressInfo.longitude,Longitude,String,TRUE
+addressInfo.postZipCode,Zip/Post code,String,TRUE
+addressInfo.region,Region,String,TRUE
+addressInfo.regionLatitude,Region Latitude,String,TRUE
+addressInfo.regionLongitude,Region Longitude,String,TRUE
+addressInfo.sitePremises,Premises,String,TRUE
+addressInfo.streetName,Street Name,String,TRUE
+addressInfo.streetNumber,Street Number,String,TRUE
+addressInfo.timezoneId,Time Zone ID,String,TRUE
+addressInfo.town,Town,String,TRUE
+applicationInfo.id,Application Id,String,FALSE
+applicationInfo.name,Application,String,TRUE
+applicationInfo.description,Application Description,String,FALSE
+connectorInfo.connectorId,Connector,String,TRUE
+connectorInfo.type,Connector Type,String,TRUE
+connectorList,Connector List,String,TRUE
+contractInfo.id,Contract ID,String,FALSE
+contractInfo.reference,Contract Info Reference,String,TRUE
+correlated,Correlated,Boolean,FALSE
+credentialInfo.type,Type,String,TRUE
+credentialInfo.key,Key,String,TRUE
+credentialInfo.login,Login,String,TRUE
+credentialInfo.secret,Secret,String,TRUE
+credentialInfo.privilege,Privilege,String,TRUE
+credentialInfo.domain,Domain,String,TRUE
+credentialInfo.communityString,Community String,String,TRUE
+credentialInfo.context,Context,String,TRUE
+credentialInfo.securityName,Security Name,String,TRUE
+credentialInfo.authProtocol,Auth Protocol,String,TRUE
+credentialInfo.authKey,Auth Key,String,TRUE
+credentialInfo.privProtocol,Private Protocol,String,TRUE
+credentialInfo.privKey,Private Key,String,TRUE
+customerGroups,Customer Groups,String,TRUE
+customerInfo.id,Customer ID,String,FALSE
+customerInfo.name,Customer Name,String,TRUE
+customerInfo.shortName,Customer Short Name,String,FALSE
+eventInfo.sourceDomainName,Domain Name,String,TRUE
+customerInfo.sourceDomainNames,Domain Names,String,FALSE
+customerInfo.status,Customer Status,String,TRUE
+deviceInfo.assetRecord,Asset Record,String,TRUE
+deviceInfo.btssAlias,BTTS Alias,String,TRUE
+deviceInfo.cabinet,Cabinet,String,TRUE
+deviceInfo.ceaseDate,Cease date,Date,TRUE
+deviceInfo.commissionDate,Commission date,Date,TRUE
+deviceInfo.cpeIdentifier,CPE Identifier,String,TRUE
+deviceInfo.cpeSupplyDetails,CPE Supply Details,String,TRUE
+deviceInfo.createDate,Create Date,Date,TRUE
+deviceInfo.createdDate,Create date,Date,TRUE
+deviceInfo.customerAlias,CustomerFriendlyHostName,String,TRUE
+deviceInfo.customerIpAddress,Customer IP Address,IpAddress,TRUE
+deviceInfo.deviceName,Device Name,String,TRUE
+deviceInfo.discoveredSerialNumber,Discovered Serial Number,String,TRUE
+deviceInfo.hostname,Management Hostname,String,TRUE
+deviceInfo.id,Device ID,String,FALSE
+deviceInfo.impssManagedFlag,IMPSS Managed Flag,String,FALSE
+deviceInfo.inventoryModel,Inventory Model,String,TRUE
+deviceInfo.inventoryStatus,Inventory Status,String,TRUE
+deviceInfo.inventoryType,Inventory Type,String,TRUE
+deviceInfo.managedFlag,Managed flag,String,TRUE
+deviceInfo.managementHostName,Management Hostname,String,TRUE
+deviceInfo.managementIpAddress,Management IP Address,IpAddress,TRUE
+deviceInfo.networkNodeId,Network ID,String,TRUE
+deviceInfo.nmdbManagedFlag,NMDB Managed Flag,String,TRUE
+deviceInfo.ownership,Ownership,String,TRUE
+deviceInfo.partnerFriendlyName,Partner Friendly Name,String,TRUE
+deviceInfo.partnerNodeIdentifier,Partner Node Identifier,String,TRUE
+deviceInfo.rackShelf,Suite Rack Shelf,String,TRUE
+deviceInfo.role,Role,String,TRUE
+deviceInfo.serialNumber,Serial Number,String,TRUE
+deviceInfo.sourceSystem,Source system,String,TRUE
+deviceInfo.subProduct,Sub Product,String,TRUE
+deviceInfo.subType,Sub Type,String,TRUE
+deviceInfo.type,Type,String,TRUE
+dynatraceAppInfo.id,Customer Application Id,String,FALSE
+dynatraceAppInfo.manualOverride,Customer Application Override,String,FALSE
+dynatraceAppInfo.name,Customer Application Name,String,TRUE
+dynatraceAppInfo.cLoc,Client Site,String,TRUE
+dynatraceAppInfo.sLoc,Server Site,String,TRUE
+dynatraceSiteInfo.id,Application Site Id,String,FALSE
+dynatraceSiteInfo.manualOverride,Application Site Override,String,FALSE
+dynatraceSiteInfo.name,Application Site Name,String,TRUE
+eventInfo.clearTimeStamp,Clear TimeStamp,Date,TRUE
+eventInfo.count,Count,String,TRUE
+eventInfo.dataType,Data Type,String,TRUE
+eventInfo.eventCategory,Event Category,String,TRUE
+eventInfo.eventId,Event Id,String,TRUE
+eventInfo.eventType,Event Type,String,TRUE
+eventInfo.faultName,FaultName,String,TRUE
+eventInfo.firstOccurred,First Occurred,Date,TRUE
+eventInfo.hostState,Host State,String,TRUE
+eventInfo.id,Event Identifier,String,FALSE
+eventInfo.lastOccurred,Last Occurred,Date,TRUE
+eventInfo.parentEvent,Parent Event,Boolean,FALSE
+eventInfo.parentEventId,Parent Event Identifier,String,TRUE
+eventInfo.parentIdentifier,Parent Identifier,String,FALSE
+eventInfo.probableCause,Cause,String,TRUE
+eventInfo.serviceCheckCommand,Service Check Command,String,TRUE
+eventInfo.servicePerfdata,Service Performance Data,String,TRUE
+eventInfo.severity,Severity,String,TRUE
+eventInfo.severity,Severity,String,TRUE
+eventInfo.severityId,Severity Value,String,TRUE
+eventInfo.smCategoryOfAlarm,Category,String,TRUE
+eventInfo.smCertaintyOfAlarmInPercentage,Certainty,String,TRUE
+eventInfo.smClassDisplayNameOfAlarm,Class,String,TRUE
+eventInfo.smElementNameOfAlarm,Element Name,String,TRUE
+eventInfo.smEventDisplayNameOfAlarm,Alarm type,String,TRUE
+eventInfo.smEventTextOfAlarm,Event Text,String,TRUE
+eventInfo.smGSAMServiceOnWhichAlarmWasNotified,Alarm Server,String,TRUE
+eventInfo.smInstanceDisplayNameOfAlarm,Instance Name,String,TRUE
+eventInfo.smIsRootAlarm,Root Alarm,String,TRUE
+eventInfo.smFirstNotifiedAtTimestampOfAlarm,First Notify,Date,TRUE
+eventInfo.smLastChangedAtTimestampOfAlarm,Last Change,Date,TRUE
+eventInfo.smLastNotifiedAtTimestampOfAlarm,Last Notified Time,Date,TRUE
+eventInfo.smObjectInstanceWhichGeneratedAlarm,Instance,String,TRUE
+eventInfo.smPEWIDOfAlarm,PEW ID,String,TRUE
+eventInfo.smOwnerOfAlarm,Owner,String,TRUE
+eventInfo.smTimeOfSendingTrap,Time of Sending Trap,Date,TRUE
+eventInfo.source,Event Source IP,String,TRUE
+eventInfo.sourceSystem,Event Source,String,TRUE
+eventInfo.sourceEventID,Source Event ID,String,TRUE
+eventInfo.state,Event State,String,TRUE
+eventInfo.timestamp,Event Timestamp,Date,TRUE
+eventInfo.proactivenetAlarmMOPath,MO Path,String,FALSE
+eventInfo.proactivenetAlarmDeviceIfNum,Interface Number,String,TRUE
+eventInfo.proactivenetAlarmDeviceIfType,Interface Type,String,TRUE
+eventInfo.proactivenetAlarmAlarmRuleName,Rule Name,String,TRUE
+eventInfo.proactivenetAlarmAbnormalityScore,Abnormality Score,String,TRUE
+eventInfo.proactivenetAlarmUrl,Source URL,String,TRUE
+eventInfo.proactivenetAlarmEscalationInfo,Escalation Info,String,TRUE
+eventInfo.proactivenetAlarmSuppression,Supression,String,TRUE
+eventInfo.proactivenetAlarmMoreInfo,More Info,String,TRUE
+eventInfo.proactivenetAlarmDeviceDescription,Device Description,String,TRUE
+featureOption.id,Feature Option Id,String,FALSE
+featureOption.name,Feature Option,String,TRUE
+featureOption.description,Feature Option Description,String,TRUE
+featureOptionInstance.id,Feature Option Instance Id,String,FALSE
+featureOptionInstance.identifier,Feature Option Instance,String,TRUE
+featureOptionInstance.type,Feature Option Instance Type,String,TRUE
+featureOptionInstance.commissionDate,Feature Option Instance Commission Date,Date,TRUE
+featureOptionInstance.ceaseDate,Feature Option Instance Cease Date,Date,TRUE
+featureOptionInstance.createdDate,Feature Option Instance Created Date,Date,TRUE
+hardwareInfo.architecture,Hardware Architecture,String,TRUE
+hardwareInfo.vendor,Hardware Vendor,String,TRUE
+hardwareInfo.instanceUuid,Hardware Instance UUID,String,TRUE
+hardwareInfo.model,Hardware Model,String,TRUE
+hardwareInfo.bios,Hardware BIOS,String,TRUE
+hardwareInfo.serial,Hardware Serial,String,TRUE
+healthInfo.computeHealth,Compute Health,Number,TRUE
+healthInfo.degradation,Health Degradation,Number,FALSE
+healthInfo.eventCountBySeverity,Event Status,String,TRUE
+healthInfo.health,Health,Number,TRUE
+healthInfo.impact,Health Impact,Number,TRUE
+healthInfo.networkHealth,Network Health,Number,TRUE
+healthInfo.applicationHealth,Application Health,Number,TRUE
+healthInfo.availability,Availability,Number,TRUE
+healthInfo.affectedUsersPerformance,Affected Users by Performance,Number,TRUE
+healthInfo.affectedUsersNetwork,Affected Users by Network,Number,TRUE
+healthInfo.affectedUsersAvailabilty,Affected Users by Availability,Number,TRUE
+id,ID,String,FALSE
+incidentInfo.id,Incident ID,String,TRUE
+incidentInfo.classificationSubType,Incident Classification Sub Type,String,TRUE
+incidentInfo.elementName,Element Name,String,TRUE
+incidentInfo.elementType,Element Type,String,FALSE
+incidentInfo.impact,Impact,String,TRUE
+incidentInfo.reportedDate,Created Date,Date,TRUE
+incidentInfo.status,Incident Status,String,TRUE
+inventoryInfo.devices,Devices,Number,TRUE
+ipAddressType.name,IP Address Type Name,String,TRUE
+ipInfo.dnsName,DNS Name,String,TRUE
+ipInfo.dnsNameAlias,DNS Name Alias,String,TRUE
+ipInfo.ipAddress,IP Address,IpAddress,TRUE
+ipInfo.ipPool,IP Pool,String,TRUE
+ipInfo.name,Name,String,TRUE
+ipInfo.subNetworkMask,Sub Network Mask,String,TRUE
+ipInfo.type,Type,String,TRUE
+linkInfo.bandwidth,Link Bandwidth,String,TRUE
+linkInfo.category,Link Category,String,FALSE
+linkInfo.id,Link ID,String,FALSE
+linkInfo.identifier,Link Identifier,String,TRUE
+linkInfo.secondaryBearerId,Link Secondary Bearer Id,String,TRUE
+linkInfo.type,Link Type,String,TRUE
+linkInfo.usage,Link Usage,String,TRUE
+localPort,Source Port,String,TRUE
+locationInfo.id,Location Info ID,String,FALSE
+locationInfo.locationFloor,Floor,String,TRUE
+locationInfo.locationRoom,Room,String,TRUE
+locationInfo.locationSubPremise,Sub Premise,String,TRUE
+maintenanceAgreement.id,Maintenance Agreement Id,String,FALSE
+maintenanceAgreement.label,Resolver Name,String,TRUE
+name,Name,String,TRUE
+networkProduct.id,Network Product ID,String,FALSE
+networkProduct.name,Network Product Name,String,TRUE
+networkProductType.id,Network Product Type ID,String,FALSE
+networkProductType.name,Network Product Type Name,String,TRUE
+networkService.ceaseDate,Network Service Cease Date,Date,TRUE
+networkService.id,Network Service Id,String,FALSE
+networkService.inventoryStatus,Network Service Inventory Status,String,TRUE
+networkService.serviceIdentifier,Network Service Identifier,String,TRUE
+nodeInfo.nodeName,Node Name,String,TRUE
+nodeInfo.sysName,Node SysName,String,TRUE
+nodeInfo.ipAddress,Node IP Address,String,TRUE
+nodeInfo.siteCode,Node Site Code,String,FALSE
+nodeInfo.serial,Node Serial,String,TRUE
+nodeInfo.id,Node ID,String,TRUE
+nodeInfo.dnsNameSet,DNS Name Set,String,TRUE
+nodeInfo.alias,Alias,String,TRUE
+nodeInfo.name,Name,String,TRUE
+nodeInfo.systemName,System Name,String,True
+nodeInfo.shortName,Short Name,String,True
+nodeInfo.domainName,Domain Name,String,True
+nodeInfo.ipv4AddressSet,IPV4 Address,String,True
+nodeInfo.phyAddrSet,Physical Address,String,True
+nodeProduct.id,Device Subtype ID,String,FALSE
+nodeProduct.name,Model Name,String,TRUE
+nodeProductType.id,Device type ID,String,FALSE
+nodeProductType.name,Device type,String,TRUE
+onboardingInfo.columnname,Column Name,String,TRUE
+onboardingStatus.comment,Comment,String,FALSE
+onboardingInfo.fileName,File Uploaded,String,TRUE
+onboardingInfo.uploadTime,Upload Time,Date,TRUE
+onboardingStatus.status,Status,String,TRUE
+onboardingInfo.tablename,Table Name,String,TRUE
+onboardingInfo.url,URL,String,TRUE
+onboardingInfo.username,Username,String,TRUE
+onboardingInfo.name,Name,String,TRUE
+onboardingInfo.priority,Priority,Number,TRUE
+onboardingInfo.customerIds,Customers,String,TRUE
+organisationInfo.id,Organisation Id,String,FALSE
+organisationInfo.name,Maintainer Name,String,TRUE
+packageInfo.id,Package Id,String,FALSE
+packageInfo.name,Package Name,String,TRUE
+packageInstance.id,Package Instance Id,String,FALSE
+packageInstance.identifier,Package Identifier,String,TRUE
+packageInstance.createdDate,Package Created Date,Date,TRUE
+packageInstance.commissionDate,Package Commission Date,Date,TRUE
+packageInstance.inventoryStatus,Package Status,String,TRUE
+packageInstance.productDescription,Package Product Description,String,TRUE
+packageType.id,Package Type Id,String,FALSE
+packageType.name,Package Type,String,TRUE
+portInfo.ceaseDate,Cease Date,Date,TRUE
+portInfo.description,Description,String,TRUE
+portInfo.id,Port ID,String,TRUE
+portInfo.key,Interface Key,String,TRUE
+portInfo.lastModifiedDate,Last Modified Date,Date,TRUE
+portInfo.name,Port Name,String,TRUE
+portInfo.resourceState,Resource State,String,TRUE
+portInfo.usage,Usage,String,TRUE
+portInfo.index,Interface Index,String,TRUE
+portInfo.speed,Interface Speed,String,TRUE
+portInfo.mtu,MTU,String,TRUE
+portInfo.physicalAddress,Physical Address,String,TRUE
+portInfo.operStatus,Operational Status,String,TRUE
+portInfo.type,Interface Type,String,TRUE
+probeInfo.dnsNameServer,DNS NameServer,String,TRUE
+probeInfo.frequency,Frequency,String,TRUE
+probeInfo.packetInterval,Packet Interval,String,TRUE
+probeInfo.packetSize,Packet Size,String,TRUE
+probeInfo.serviceClass,Service Class,String,TRUE
+probeInfo.sourceIPAddress,Source IPAddress,Date,TRUE
+probeInfo.sourcePortNumber,Source PortNumber,String,TRUE
+probeInfo.startTime,StartTime,Date,TRUE
+probeInfo.state,State,String,TRUE
+probeInfo.targetIPAddress,Target IPAddress,IpAddress,TRUE
+probeInfo.targetPortNumber,Target PortNumber,String,TRUE
+probeInfo.targetURL,Target URL,String,TRUE
+probeInfo.testID,Test ID,String,TRUE
+probeInfo.testLife,Test Life,String,TRUE
+probeInfo.testName,Test Name,String,TRUE
+probeInfo.testProtocol,Test Protocol,String,TRUE
+probeInfo.testType,Test Type,String,TRUE
+productRefInfo.productCategory,Product Category,String,TRUE
+productRefInfo.productFriendlyName,Product Friendly Name,String,TRUE
+productRefInfo.productMappings,Product Mappings,String,TRUE
+productRefInfo.productReferenceId,Product Reference ID,String,FALSE
+productRefInfo.productSubCategory,Product Subcategory,String,TRUE
+productRootElement.identifier,Product Root Element Identifier,String,TRUE
+remoteNode.deviceInfo.hostname,Remote Node Hostname,String,TRUE
+remoteNode.deviceInfo.id,Remote Node ID,String,FALSE
+remoteNode.port,Remote Node Port,String,TRUE
+remoteNode.portInfo.id,Remote Node Port Info ID,String,FALSE
+remoteNode.portInfo.name,Remote Port Name,String,TRUE
+remotePort,Target Port,String,TRUE
+requestInfo.id,Request ID,String,TRUE
+requestInfo.name,Request Name,String,TRUE
+requestInfo.batchId,Request Batch ID,String,TRUE
+roleName,Role Name,String,TRUE
+scheduleInfo.nextRunTime,Next Run Time,Date,TRUE
+scheduleInfo.startDateTime,Start Date Time,Date,TRUE
+scheduleInfo.endDateTime,End Date Time,Date,TRUE
+scheduleInfo.interval,Interval,String,TRUE
+scheduleInfo.cron,CRON,String,TRUE
+scheduleInfo.type,Type,String,TRUE
+serviceAccountInfo.ids,Service Account IDS,String,FALSE
+serviceAccountInfo.id,Service Account ID,String,FALSE
+serviceAccountInfo.name,Service Account Name,String,TRUE
+siteInfo.customerType,Site Customer Type,String,TRUE
+siteInfo.customerName,Site Customer Name,String,TRUE
+siteInfo.id,Site ID,String,FALSE
+siteInfo.name,Site Name,String,TRUE
+siteInfo.reference,Site Reference,String,TRUE
+siteInfo.siteType,Site Type,String,TRUE
+softwareInfo.id,Software Id,String,FALSE
+softwareInfo.name,Software Name,String,TRUE
+softwareInfo.commissionDate,Software Commission Date,Date,TRUE
+softwareInfo.createdDate,Software Created Date,Date,TRUE
+softwareInfo.type,Software Type,Date,TRUE
+softwareInfo.version,Software Version,Date,TRUE
+softwareInfo.description,Software Description,Date,TRUE
+softwareInfo.release,Software Release,String,TRUE
+softwareInfo.kernel,Software Kernel,String,TRUE
+softwareInfo.platform,Software Platform,String,TRUE
+softwareInfo.operatingSystem,Software Operating System,String,TRUE
+statusInfo.status,Status,String,TRUE
+statusInfo.subStatus,Sub Status,String,TRUE
+source.deviceInfo.hostname,Source Management Hostname,String,TRUE
+subType,Sub Type,String,TRUE
+target.deviceInfo.hostname,Target Management Hostname,String,TRUE
+targetPoolInfo.subnets,Subnets,String,TRUE
+targetPoolInfo.targets,Targets,String,TRUE
+targetPoolInfo.ranges,Ranges,String,TRUE
+templateInfo.ids,Template IDs,String,FALSE
+templateInfo.id,Template ID,String,FALSE
+templateInfo.name,Template Name,String,TRUE
+timestamp,Timestamp,Date,TRUE
+type,Type,String,TRUE
+virtualizationInfo.vendor,Virtualization Vendor,String,TRUE
+virtualizationInfo.parent,Virtualization Parent,String,TRUE
+virtualizationInfo.role,Virtualization Role,String,TRUE
+virtualizationInfo.type,Virtualization Type,String,TRUE
+virtualizationInfo.name,Virtualization Name,String,TRUE
+virtualizationInfo.virtual,Virtualization Virtual,String,TRUE

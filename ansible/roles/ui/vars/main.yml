@@ -1,0 +1,8 @@
+---
+ui_user: '{{ nginx_user }}'
+ui_group: '{{ nginx_group }}'
+ui_zip_file: 'fx-ui-{{ versions.app }}.zip'
+ui_base_dir: '{{ lib_dir }}/ui'
+ui_conf_dir: '{{ conf_dir }}/ui'
+ui_log_dir: '{{ log_dir }}/ui'
+ui_data_dir: '{{ data_dir }}/ui'

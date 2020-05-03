@@ -1,0 +1,104 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ ls_app_lib_dir }}' }
+    - { path: '{{ ls_app_lib_dir }}/{{ versions.app }}' }
+    - { path: '{{ ls_app_lib_dir }}/{{ versions.app }}/settings' }
+  tags:
+    - patch
+    - logstash_patch
+
+- name: copy logstash offline plugin zip
+  copy:
+    src: '{{ ls_app_plugins_zip }}'
+    dest: '{{ ls_app_plugin_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: install plugins for logstash
+  tags:
+    - plugin_patch
+  
+- meta: flush_handlers
+
+- name: copy app zip file  to server
+  copy:
+    src: '{{ ls_app_zip }}'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: unarchive app file
+  tags:
+    - patch
+    - logstash_patch
+   
+- meta: flush_handlers
+
+- name: create  current link for logstash
+  file:    
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: link
+  notify: restart logstash
+  with_items:
+    - { src: '{{ ls_app_lib_dir }}/{{ versions.app }}', dest: '{{ ls_app_lib_dir }}/current' }
+  tags:
+    - patch
+    - logstash_patch
+
+- name: copy nginx conf  file
+  template:
+    src: 'logstash-nginx.conf.j2'
+    dest: '{{ nginx_se_conf_dir }}/logstash.conf'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart nginx
+  tags:
+    - logstash
+
+- name: copy pipeline config and env file
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart logstash
+  with_items:
+    - { src: 'pipelines.yml.j2', dest: '{{ ls_settings_dir }}/pipelines.yml' }
+    - { src: 'ls_env.sh.j2', dest: '{{ profile_dir }}/logstash-app.sh' }
+  tags:
+    - patch
+    - logstash_patch
+
+- name: check rmq password in keystore
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    {{ ls_app_install_dir }}/bin/logstash-keystore --path.settings {{ ls_app_settings_dir }} list | grep -i rmq_pwd
+  ignore_errors: yes
+  register: rmqpwd_present
+  vars:
+    ansible_become: yes
+    ansible_become_user: '{{ app_user }}'
+    ansible_become_password: '{{ es_app_password }}'
+
+- name: add rmq password to keystore
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    echo {{ rmq_password }} | {{ ls_app_install_dir }}/bin/logstash-keystore --path.settings {{ ls_app_settings_dir }} add RMQ_PWD
+  when:
+    - rmqpwd_present.stdout == ""
+  vars:
+    ansible_become: yes
+    ansible_become_user: '{{ app_user }}'
+    ansible_become_password: '{{ es_app_password }}'

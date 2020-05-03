@@ -1,0 +1,222 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ app_base_dir }}' }
+    - { path: '{{ app_conf_dir }}' }
+    - { path: '{{ app_log_dir }}' }
+    - { path: '{{ app_data_dir }}' }
+    - { path: '{{ runit_sv_dir }}/app' }
+    
+- name: copy app lib jars
+  copy:
+    src: '{{ app_lib_file }}'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: unzip libs file
+  tags:
+    - withDeps
+
+- meta: flush_handlers
+
+- name: create current link for all app lib jars and runit files
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: link
+  with_items:
+    - { src: '{{ app_libs_dir }}-{{ versions.app }}', dest: '{{ app_libs_dir }}' }
+    - { src: '{{ runit_sv_dir }}/app', dest: '{{ runit_service_dir }}/app' }  
+  tags:
+    - withDeps
+
+- name: copy app nginx conf on din
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart nginx
+  with_items:
+    - { src: 'connectors-nginx.conf.j2', dest: '{{ nginx_se_conf_dir }}/app.conf' }
+  when: inventory_hostname in groups['din']
+  tags:
+    - patch
+    - app_patch
+    - app_nginx
+
+- name: copy app nginx conf on nce
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart nginx
+  with_items:
+    - { src: 'rest-nginx.conf.j2', dest: '{{ nginx_se_conf_dir }}/app.conf' }
+  when: inventory_hostname in groups['nce']
+  tags:
+    - patch
+    - app_patch
+    - app_nginx
+
+- name: copy audit api redirect conf file
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart nginx
+  with_items:
+    - { src: 'auditService-nginx.conf.j2', dest: '{{ nginx_se_conf_dir }}/auditService.conf' }
+  when: ( inventory_hostname not in groups['mon'] and audit_service_node == 'managementCluster' )
+  tags:
+    - patch
+    - app_patch
+
+- name: delete auditService nginx conf file if audit service to be run main cluster
+  file:
+    path: '{{ nginx_se_conf_dir }}/auditService.conf'
+    state: absent
+  when: audit_service_node == 'mainCluster'
+
+- name: copy DIN app conf files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart app
+  with_items:
+    - { src: 'connectors.properties.j2', dest: '{{ app_conf_dir }}/app.properties' }
+  when: inventory_hostname in groups['din'] 
+  tags:
+    - patch
+    - app_patch
+    
+- name: copy NCE app conf files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart app
+  with_items:
+    - { src: 'rest.properties.j2', dest: '{{ app_conf_dir }}/app.properties' }
+  when: inventory_hostname in groups['nce']            
+  tags:
+    - patch
+    - app_patch
+
+- name: copy auditService conf files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart app
+  with_items:
+    - { src: 'auditService.properties.j2', dest: '{{ app_conf_dir }}/app.properties' }
+  when: inventory_hostname in groups['mon']
+  tags:
+    - patch
+    - app_patch
+
+- name: copy app lib jars, java policy and fields.csv
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart app
+  with_items:
+    - { src: '{{ app_jar_file }}', dest: '{{ app_base_dir }}' } 
+    - { src: 'java.policy', dest: '{{ home_dir }}/.java.policy' } 
+    - { src: 'fields.csv', dest: '{{ app_conf_dir }}' }
+  tags:
+    - patch
+    - app_patch
+
+- name: create current link for app jar
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: link
+  notify: restart app
+  with_items:
+    - { src: '{{ app_jar_file }}', dest: '{{ app_base_dir }}/fx-app-current.jar' }
+  tags:
+    - patch
+    - app_patch
+    
+- name: copy app uninstall script and log4j files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_items:
+    - { src: 'uninstall-app.sh.j2', dest: '{{ scripts_dir }}/uninstall-app.sh'  }
+    - { src: 'sv-fx-app-run.j2', dest: '{{ runit_sv_dir }}/app/run' }
+    - { src: 'log4j2.properties.j2', dest: '{{ app_conf_dir }}/log4j2.properties'}
+
+- name: check for certificate alias in java keytool
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    ${JAVA_HOME}/bin/keytool -list -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -alias elasticsearch
+  ignore_errors: yes
+  register: is_certs
+  vars:
+    ansible_become: yes
+    ansible_become_user: '{{ app_user }}'
+    ansible_become_password: '{{ es_app_password }}'
+   
+- name: import certificate to java keytool
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    ${JAVA_HOME}/bin/keytool -import -alias elasticsearch -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt -file {{ certs_dir }}/instance.crt
+  when: is_certs.rc != 0
+  vars:
+    ansible_become: yes
+    ansible_become_user: '{{ app_user }}'
+    ansible_become_password: '{{ es_app_password }}'
+  
+- name: run nce server tasks
+  import_tasks: nce.yml
+  when: inventory_hostname in groups['nce'] 
+  tags:
+    - patch
+    - app_patch
+ 
+- name: run din server tasks
+  import_tasks: din.yml
+  when: inventory_hostname in groups['din']
+  tags:
+    - patch
+    - app_patch
+
+- name: start and enable app, if not running
+  runit:
+    name: app
+    state: started
+    enabled: yes
+    service_dir: '{{ runit_service_dir }}'

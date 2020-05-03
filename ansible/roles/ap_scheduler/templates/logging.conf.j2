@@ -1,0 +1,53 @@
+[loggers]
+keys = root, scheduler, dmq_actors
+
+[handlers]
+keys = stderr, stdout, scheduler_file, dmq_actors_file
+
+[formatters]
+keys = default
+
+[logger_root]
+level = INFO
+handlers = stderr, scheduler_file
+
+[logger_scheduler]
+level = INFO
+handlers = stderr
+propagate = 1
+qualname = scheduler
+
+[logger_dmq_actors]
+level = INFO
+handlers = stderr, dmq_actors_file
+propagate = 1
+qualname = dmq_actors
+
+
+[handler_stdout]
+class = StreamHandler
+args = (sys.stdout,)
+level = INFO
+formatter = default
+
+[handler_stderr]
+class = StreamHandler
+args = (sys.stdout,)
+level = ERROR
+formatter = default
+
+[handler_scheduler_file]
+class=utils.log_manager.handlers.FsConcurrentRotatingFileHandler
+args=('scheduler.log', 'a', 100, 30,)
+formatter = default
+level=DEBUG
+
+[handler_dmq_actors_file]
+class=utils.log_manager.handlers.FsConcurrentRotatingFileHandler
+args=('dmq_actors.log', 'a', 100, 30,)
+formatter = default
+level=DEBUG
+
+
+[formatter_default]
+format = %(asctime)s - %(process)d - %(module)s - %(name)s - %(funcName)s - %(levelname)s : %(lineno)d - %(message)s

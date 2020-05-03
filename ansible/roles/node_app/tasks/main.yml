@@ -1,0 +1,88 @@
+---
+- name: create directories
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ na_base_dir }}' }
+    - { path: '{{ na_conf_dir }}' }
+    - { path: '{{ na_log_dir }}' }
+
+- name: copy node_app tar to server
+  copy:
+    src: '{{ na_tar_file  }}'
+    dest: '{{ archives_dir }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify:
+    - extract node_app tar
+   
+- meta: flush_handlers
+
+- name: create current link for node_app and pm2 link for node_app_modules
+  file:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: link
+  with_items:
+    - { src: '{{ na_install_dir }}', dest: '{{ na_base_dir }}/current'}
+    - { src: '{{ na_base_dir }}/current/node_modules/pm2/bin/pm2', dest: '{{ bin_dir }}/pm2' }
+
+- name: copy nginx conf file
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  notify: restart nginx
+  with_items:
+    - { src: 'node-app-nginx.conf.j2', dest: '{{ nginx_se_conf_dir }}/node-app.conf'}
+
+- name: copy process.json and node env file
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_items:
+    - { src: 'process.json.j2', dest: '{{ na_conf_dir }}/process.json'}
+    - { src: 'config.json.j2', dest: '{{ na_install_dir }}/config.json'}
+
+- name: copy node.sh file to script directory
+  copy:
+    src: 'node-app-env.sh'
+    dest: '{{ profile_dir }}/node-app.sh'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+    
+- name: copy uninstall script
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_items:
+    - { src: 'uninstall-node-app.sh.j2', dest: '{{ scripts_dir }}/uninstall-node-app.sh'}
+
+- meta: flush_handlers
+
+- name: run node
+  args:
+    chdir: '{{ na_install_dir }}'
+  shell: |
+    source /etc/profile.d/{{ app_name }}.sh
+    {{ na_install_dir }}/node_modules/pm2/bin/pm2 startOrGracefulReload {{ na_conf_dir }}/process.json
+  vars:
+    ansible_become: yes
+    ansible_become_user: '{{ app_user }}'
+    ansible_become_password: '{{ es_app_password }}'

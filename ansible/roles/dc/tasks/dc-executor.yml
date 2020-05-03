@@ -1,0 +1,30 @@
+---
+- name: copy dc-executor run file
+  template:
+    src: 'sv-dc-executor-run.j2'
+    dest: "{{ runit_sv_dir }}/dc-executor-{{ item }}/run"
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0755
+  with_sequence: count={{executor_num_workers}}
+  tags: copy-dc-executor
+  notify: restart dc-executor
+
+- name: runit sv dir to service dir
+  file:
+    src: "{{ runit_sv_dir }}/dc-executor-{{ item }}"
+    dest: "{{ runit_service_dir }}/dc-executor-{{ item }}"
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    state: link
+  with_sequence: count={{executor_num_workers}}
+  tags: link-dc-executor
+
+- name: dc executor started
+  runit:
+    name: "dc-executor-{{ item }}"
+    state: started
+    enabled: yes
+    service_dir: '{{ runit_service_dir }}'
+  with_sequence: count={{executor_num_workers}}
+  tags: run-dc-executor

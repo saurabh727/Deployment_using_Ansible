@@ -1,0 +1,33 @@
+logging.config=${SE_CONF}/app/log4j2.properties
+
+dal.es.primary.clusterPassword={{ es_app_password }}
+dal.es.secondary.clusterPassword={{ es_app_password }}
+
+spring.mail.host={{ mail_host }}
+spring.mail.port={{ mail_port }}
+spring.mail.username={{ mail_user }}
+spring.mail.password={{ mail_password }}
+spring.mail.properties.mail.smtp.auth={{ mail_smtp_auth }}
+spring.mail.properties.mail.smtp.starttls.enable={{ mail_smtp_tls_enable }}
+spring.mail.properties.mail.smtp.starttls.required={{ mail_smtp_tls_required }}
+
+app.mail.from={{ mail_from }}
+app.mail.to={{ mail_to }}
+app.mail.cc={{ mail_cc }}
+app.mail.bcc={{ mail_bcc }}
+
+firestorm.esp.file.listener.enabled=true
+
+app.rmq.enabled=true
+app.onboarding.rmq.listener.enabled=true
+
+spring.rabbitmq.addresses={{ groups["rabbitmq"] | join(":${RMQ_PORT},") }}:${RMQ_PORT}
+spring.rabbitmq.username={{ app_user }}
+spring.rabbitmq.password={{ rmq_password }}
+spring.rabbitmq.ssl.enabled=${RMQ_SSL:false}
+spring.rabbitmq.ssl.algorithm=TLSv1.2
+spring.rabbitmq.ssl.verify-hostname=false
+
+app.rmq.queues.correlation.exchange=preProcess_exchange
+app.rmq.queues.onboarding.exchange=onboarding_exchange
+app.rmq.queues.persistence.exchange=persistence_exchange

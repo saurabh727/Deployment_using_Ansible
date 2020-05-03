@@ -1,0 +1,9 @@
+---
+- name: extract ui zip
+  unarchive:
+    owner: '{{ ui_user }}'
+    group: '{{ ui_group }}'
+    src: '{{ ui_base_dir }}/{{ ui_zip_file }}'
+    dest: '{{ ui_base_dir }}'
+    remote_src: yes
+    mode: 0755
